@@ -1,0 +1,16 @@
+@use '../../sass/variables';
+
+.expenses {
+  color: variables.$cl-almostBlack;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  letter-spacing: 0.5px;
+
+  & h4 {
+    font-size: variables.$fs-h4;
+    color: variables.$cl-red;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+}

@@ -1,0 +1,43 @@
+@use '../../sass/variables';
+
+.header {
+  height: 8rem;
+  width: 100%;
+  color: variables.$cl-almostBlack;
+  background-color: variables.$cl-yellow;
+  padding: 0 4.8rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &__logo {
+    font-size: variables.$fs-h2;
+  }
+
+  &__user-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__greeting {
+    padding-right: 0.8rem;
+  }
+
+  &__username {
+    font-weight: 600;
+    padding-right: 2.4rem;
+  }
+
+  &__user_image-container {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50px;
+    overflow: hidden;
+  }
+
+  &__user_image {
+    width: 100%;
+  }
+}

@@ -1,23 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import './App.scss';
+import Header from './components/header/Header';
+import Budget from './components/budget/Budget';
+import Expenses from './components/expenses/Expenses';
+import Remaining from './components/remaining/Remaining';
+import UserInputs from './components/inputs/UserInputs';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <main className="main">
+        <div className="user_interactions_wrapper">
+          <div className="balance_values">
+            <Budget />
+            <Expenses />
+            <Remaining />
+          </div>
+          <UserInputs />
+        </div>
+      </main>
     </div>
   );
 }
