@@ -5,6 +5,7 @@ import Expenses from './components/expenses/Expenses';
 import Remaining from './components/remaining/Remaining';
 import UserInputs from './components/inputs/UserInputs';
 import BarChartComponent from './components/barChart/BarChartComponent';
+import ExpenseList from './components/expenseList/ExpenseList';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           </div>
           <BarChartComponent />
         </div>
+        <ExpenseList />
       </main>
     </div>
   );

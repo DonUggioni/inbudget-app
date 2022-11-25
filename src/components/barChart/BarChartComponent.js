@@ -3,21 +3,21 @@ import './BarChartComponent.scss';
 
 import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
-const data = [
-  { name: 'Page A', uv: 350, pv: 2400, amt: 2400 },
-  { name: 'Page A', uv: 100, pv: 2400, amt: 2400 },
-  { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
-  { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
-  { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
-  { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
-  { name: 'Page A', uv: 1, pv: 2400, amt: 2400 },
-  { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
-  { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
-  { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
-  { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
-];
-
 function BarChartComponent() {
+  const data = [
+    { name: 'Page A', uv: 350, pv: 2400, amt: 2400 },
+    { name: 'Page A', uv: 100, pv: 2400, amt: 2400 },
+    { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
+    { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
+    { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
+    { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
+    { name: 'Page A', uv: 1, pv: 2400, amt: 2400 },
+    { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
+    { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
+    { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
+    { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
+  ];
+
   return (
     <div className="chart_container">
       <ResponsiveContainer height="100%">
