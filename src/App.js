@@ -4,6 +4,7 @@ import Budget from './components/budget/Budget';
 import Expenses from './components/expenses/Expenses';
 import Remaining from './components/remaining/Remaining';
 import UserInputs from './components/inputs/UserInputs';
+import BarChartComponent from './components/barChart/BarChartComponent';
 
 function App() {
   return (
@@ -11,12 +12,15 @@ function App() {
       <Header />
       <main className="main">
         <div className="user_interactions_wrapper">
-          <div className="balance_values">
-            <Budget />
-            <Expenses />
-            <Remaining />
+          <div className="user_interactions_wrapper--inner_wrapper">
+            <div className="balance_values">
+              <Budget />
+              <Expenses />
+              <Remaining />
+            </div>
+            <UserInputs />
           </div>
-          <UserInputs />
+          <BarChartComponent />
         </div>
       </main>
     </div>

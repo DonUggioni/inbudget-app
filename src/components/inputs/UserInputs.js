@@ -6,8 +6,12 @@ function UserInputs() {
   return (
     <form className="input">
       <div className="input__selectors-wrapper">
-        <select className="input__selector" id="selector">
-          <option value="" disabled selected hidden>
+        <select
+          className="input__selector"
+          id="selector"
+          defaultValue={'default'}
+        >
+          <option value="default" disabled hidden>
             Type
           </option>
           <option value="expense">Expense</option>

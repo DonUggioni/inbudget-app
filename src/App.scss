@@ -8,4 +8,12 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 7.4rem;
+  gap: 2.4rem;
+}
+
+.user_interactions_wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4rem;
 }
