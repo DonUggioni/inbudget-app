@@ -9,7 +9,7 @@ function BarChartComponent() {
     { name: 'Page A', uv: 100, pv: 2400, amt: 2400 },
     { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
     { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
-    { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
+    { name: 'Page A', uv: 100, pv: 2400, amt: 2400 },
     { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
     { name: 'Page A', uv: 1, pv: 2400, amt: 2400 },
     { name: 'Page A', uv: 200, pv: 2400, amt: 2400 },
