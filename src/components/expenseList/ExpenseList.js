@@ -7,6 +7,7 @@ import './ExpenseList.scss';
 
 function ExpenseList() {
   const context = useContext(ListValuesContext);
+
   return (
     <ul className="list__container">
       {context.expensesList.map((item) => {

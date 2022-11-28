@@ -1,24 +1,24 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ListValuesContext } from '../store/AppContext';
 
 import './UserInputs.scss';
 
 function UserInputs() {
   const context = useContext(ListValuesContext);
-  const [type, setType] = useState('');
-  const descriptionRef = useRef();
-  const amountRef = useRef();
+  const [type, setType] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [amount, setAmount] = useState(null);
 
   function submitHandler(e) {
-    context.setDescription(descriptionRef.current.value);
-    context.setAmount(Number(amountRef.current.value));
     context.setType(type);
-    context.addExpenseHandler();
+    context.setDescription(description);
+    context.setAmount(amount);
+    context.addExpense(description, type, amount);
     e.preventDefault();
   }
 
   return (
-    <form onSubmit={() => submitHandler} className="input">
+    <form onSubmit={(e) => submitHandler(e)} className="input">
       <div className="input__selectors-wrapper">
         <select
           className="input__selector"
@@ -36,11 +36,13 @@ function UserInputs() {
       <input
         className="input__expense-description input_field"
         placeholder="Add a description"
-        ref={descriptionRef}
+        // ref={descriptionRef}
+        onChange={(e) => setDescription(e.target.value)}
       />
       <div className="input__add-wrapper">
         <input
-          ref={amountRef}
+          // ref={amountRef}
+          onChange={(e) => setAmount(e.target.value)}
           className="input__amount input_field"
           placeholder="Amount"
         />
