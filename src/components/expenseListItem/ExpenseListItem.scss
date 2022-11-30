@@ -26,8 +26,26 @@
   }
 
   &__value--wrapper {
-    padding: 0.4rem 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
     border-radius: 5px;
+  }
+
+  &__value {
+    padding: 0.4rem 0.8rem;
+    display: block;
+    border-radius: 5px;
+  }
+
+  &__delete-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+
+    & img {
+      width: 1.6rem;
+    }
   }
 }
 

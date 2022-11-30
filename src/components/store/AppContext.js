@@ -6,6 +6,10 @@ import {
   addDoc,
   setDoc,
   onSnapshot,
+  doc,
+  query,
+  orderBy,
+  deleteDoc,
 } from 'firebase/firestore';
 import Moment from 'moment';
 
@@ -16,14 +20,19 @@ function AppContext({ children }) {
   const [type, setType] = useState('');
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState(0);
+  const [initialBudget, setInitialBudget] = useState(0);
 
   const listRef = useMemo(() => collection(db, 'expenses'), []);
-  console.log(listRef);
-  console.log(expensesList);
+  const orderedList = query(
+    listRef,
+    orderBy('date', 'desc'),
+    orderBy('time', 'desc')
+  );
 
+  // Get list from database and set the initial state
   useEffect(() => {
     async function getList() {
-      const data = await getDocs(listRef);
+      const data = await getDocs(orderedList);
       console.log(data);
       setExpensesList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     }
@@ -31,23 +40,35 @@ function AppContext({ children }) {
     getList();
   }, [listRef]);
 
+  // Add items to the list
   async function addExpense(description, type, amount) {
     await addDoc(listRef, {
       description: description,
       type: type,
       amount: Number(amount),
       date: Moment().format('DD/MM/YYYY'),
+      time: Moment().format('HH:mm:ss'),
     });
 
-    onSnapshot(listRef, (snapshot) =>
+    // After adding item, gets a snapshot from current list and updates the state
+    onSnapshot(orderedList, (snapshot) =>
       setExpensesList(
         snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       )
     );
   }
-  // if (type && description && amount) {
-  //   addExpense();
-  // }
+
+  // Delete items from the list
+  async function deleteExpense(id) {
+    await deleteDoc(doc(db, 'expenses', id));
+
+    // After deleting item, gets a snapshot from current list and updates the state
+    onSnapshot(orderedList, (snapshot) =>
+      setExpensesList(
+        snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      )
+    );
+  }
 
   const values = {
     expensesList,
@@ -59,6 +80,9 @@ function AppContext({ children }) {
     amount,
     setAmount,
     addExpense,
+    deleteExpense,
+    initialBudget,
+    setInitialBudget,
   };
 
   return (

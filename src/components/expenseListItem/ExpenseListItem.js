@@ -1,4 +1,5 @@
 import React from 'react';
+import trashIcon from '../../assets/images/trash-can-solid.svg';
 
 import './ExpenseListItem.scss';
 
@@ -10,8 +11,13 @@ function ExpenseListItem(props) {
         <span className="item__date">{props.date}</span>
         <p className="item__description">{props.description}</p>
       </div>
-      <div className={`item__value--wrapper ${props.classVariation}`}>
-        <span className="item__value">{props.value}</span>
+      <div className={`item__value--wrapper`}>
+        <span className={`item__value ${props.classVariation}`}>
+          {props.value}
+        </span>
+        <button className="item__delete-btn" onClick={props.onClick}>
+          <img src={trashIcon} alt="Delete item button" />
+        </button>
       </div>
     </li>
   );
