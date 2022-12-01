@@ -1,26 +1,37 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { ListValuesContext } from '../store/AppContext';
 
 import './Budget.scss';
 
 function Budget() {
   const context = useContext(ListValuesContext);
-  const [initialBudgetInput, setInitialBudgetInput] = useState(true);
-  const budgetInputRef = useRef(null);
+  const [initialBudgetInput, setInitialBudgetInput] = useState('');
+  const [budgetInputEl, setBudgetInputEl] = useState(false);
+  const [budgetDisplayEl, setbudgetDisplayEl] = useState(false);
 
   function initialBudgetHandler(e) {
     e.preventDefault();
-    context.setInitialBudget(+budgetInputRef.current.value);
-    setInitialBudgetInput(false);
+    // context.setInitialBudget(initialBudgetInput);
+    context.addBudget(initialBudgetInput);
   }
 
-  function editBudgetHandler() {
-    setInitialBudgetInput(true);
-  }
+  useEffect(() => {
+    function budgetInput() {
+      if (context.initialBudget === '' || context.initialBudget.length === 0) {
+        setBudgetInputEl(true);
+      }
+
+      if (context.initialBudget.length > 0) {
+        setBudgetInputEl(false);
+        setbudgetDisplayEl(true);
+      }
+    }
+    budgetInput();
+  }, [context.initialBudget]);
 
   return (
     <div className="budget">
-      {initialBudgetInput && (
+      {budgetInputEl && (
         <form
           onSubmit={(e) => initialBudgetHandler(e)}
           className="budget__form"
@@ -33,17 +44,22 @@ function Budget() {
             id="budget__input"
             name="budget__input"
             placeholder="Add initial budget."
-            ref={budgetInputRef}
+            onChange={(e) => setInitialBudgetInput(e.target.value)}
           />
         </form>
       )}
-      {!initialBudgetInput && (
+      {budgetDisplayEl && (
         <>
           <span>Budget - </span>
-          <h4>${context.initialBudget}</h4>
-          <button onClick={editBudgetHandler} className="budget__edit--btn">
+          <h4>
+            $
+            {context.initialBudget
+              ? context.initialBudget[0].initialBudget
+              : ''}
+          </h4>
+          {/* <button onClick={editBudgetHandler} className="budget__edit--btn">
             Edit
-          </button>
+          </button> */}
         </>
       )}
     </div>

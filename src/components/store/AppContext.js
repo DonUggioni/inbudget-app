@@ -4,7 +4,6 @@ import {
   collection,
   getDocs,
   addDoc,
-  setDoc,
   onSnapshot,
   doc,
   query,
@@ -20,25 +19,40 @@ function AppContext({ children }) {
   const [type, setType] = useState('');
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState(0);
-  const [initialBudget, setInitialBudget] = useState(0);
+  const [initialBudget, setInitialBudget] = useState('');
+  const [expensesTotal, setExpensesTotal] = useState('');
+  const [remaining, setRemaining] = useState('');
 
   const listRef = useMemo(() => collection(db, 'expenses'), []);
+  const budgetRef = useMemo(() => collection(db, 'budget'), []);
   const orderedList = query(
     listRef,
-    orderBy('date', 'desc'),
+    orderBy('date', 'asc'),
+    orderBy('time', 'desc')
+  );
+
+  const orderedBudget = query(
+    budgetRef,
+    orderBy('date', 'asc'),
     orderBy('time', 'desc')
   );
 
   // Get list from database and set the initial state
   useEffect(() => {
     async function getList() {
-      const data = await getDocs(orderedList);
-      console.log(data);
+      const data = await getDocs(listRef);
       setExpensesList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     }
-
     getList();
   }, [listRef]);
+
+  useEffect(() => {
+    async function getInitialBudget() {
+      const data = await getDocs(budgetRef);
+      setInitialBudget(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    }
+    getInitialBudget();
+  }, [budgetRef]);
 
   // Add items to the list
   async function addExpense(description, type, amount) {
@@ -70,6 +84,21 @@ function AppContext({ children }) {
     );
   }
 
+  async function addBudget(budget) {
+    await addDoc(budgetRef, {
+      initialBudget: budget,
+      date: Moment().format('DD/MM/YYYY'),
+      time: Moment().format('HH:mm:ss'),
+    });
+
+    // After adding item, gets a snapshot from current list and updates the state
+    onSnapshot(orderedBudget, (snapshot) =>
+      setInitialBudget(
+        snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      )
+    );
+  }
+
   const values = {
     expensesList,
     setExpensesList,
@@ -83,6 +112,11 @@ function AppContext({ children }) {
     deleteExpense,
     initialBudget,
     setInitialBudget,
+    addBudget,
+    expensesTotal,
+    setExpensesTotal,
+    remaining,
+    setRemaining,
   };
 
   return (

@@ -8,7 +8,6 @@ import './ExpenseList.scss';
 function ExpenseList() {
   const context = useContext(ListValuesContext);
   const [userLanguage, setUserLanguage] = useState('');
-  console.log(context.expensesList);
 
   useEffect(() => {
     setUserLanguage(navigator.language);

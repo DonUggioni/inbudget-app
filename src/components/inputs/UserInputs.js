@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { ListValuesContext } from '../store/AppContext';
 
 import './UserInputs.scss';
@@ -8,13 +8,20 @@ function UserInputs() {
   const [type, setType] = useState(null);
   const [description, setDescription] = useState(null);
   const [amount, setAmount] = useState(null);
+  const descriptionRef = useRef();
+  const amountRef = useRef();
+  const optionRef = useRef();
 
   function submitHandler(e) {
+    e.preventDefault();
     context.setType(type);
     context.setDescription(description);
     context.setAmount(amount);
     context.addExpense(description, type, amount);
-    e.preventDefault();
+    descriptionRef.current.value = '';
+    amountRef.current.value = '';
+    optionRef.current.value = 'default';
+    console.log(optionRef.current.value);
   }
 
   return (
@@ -25,6 +32,7 @@ function UserInputs() {
           id="selector"
           defaultValue={'default'}
           onChange={(e) => setType(e.target.value)}
+          ref={optionRef}
         >
           <option value="default" disabled hidden>
             Type
@@ -36,12 +44,12 @@ function UserInputs() {
       <input
         className="input__expense-description input_field"
         placeholder="Add a description"
-        // ref={descriptionRef}
+        ref={descriptionRef}
         onChange={(e) => setDescription(e.target.value)}
       />
       <div className="input__add-wrapper">
         <input
-          // ref={amountRef}
+          ref={amountRef}
           onChange={(e) => setAmount(e.target.value)}
           className="input__amount input_field"
           placeholder="Amount"
