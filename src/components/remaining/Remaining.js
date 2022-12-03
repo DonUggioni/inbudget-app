@@ -19,6 +19,7 @@ function Remaining() {
         );
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context.expensesList, context.expensesTotal, context.initialBudget]);
 
   return (

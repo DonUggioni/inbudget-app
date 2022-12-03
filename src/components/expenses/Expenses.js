@@ -17,6 +17,7 @@ function Expenses() {
     context.setExpensesTotal(
       expensesArr.reduce((prev, curr) => prev + curr, 0)
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context.expensesList]);
 
   return (

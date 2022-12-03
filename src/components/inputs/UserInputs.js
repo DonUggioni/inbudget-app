@@ -21,7 +21,6 @@ function UserInputs() {
     descriptionRef.current.value = '';
     amountRef.current.value = '';
     optionRef.current.value = 'default';
-    console.log(optionRef.current.value);
   }
 
   return (

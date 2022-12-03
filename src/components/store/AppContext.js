@@ -25,10 +25,9 @@ function AppContext({ children }) {
 
   const listRef = useMemo(() => collection(db, 'expenses'), []);
   const budgetRef = useMemo(() => collection(db, 'budget'), []);
-  const orderedList = query(
-    listRef,
-    orderBy('date', 'asc'),
-    orderBy('time', 'desc')
+  const orderedList = useMemo(
+    () => query(listRef, orderBy('date', 'desc'), orderBy('time', 'desc')),
+    [listRef]
   );
 
   const orderedBudget = query(
@@ -40,12 +39,18 @@ function AppContext({ children }) {
   // Get list from database and set the initial state
   useEffect(() => {
     async function getList() {
-      const data = await getDocs(listRef);
-      setExpensesList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      // const data = await getDocs(listRef);
+      // setExpensesList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      onSnapshot(orderedList, (snapshot) =>
+        setExpensesList(
+          snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+        )
+      );
     }
     getList();
-  }, [listRef]);
+  }, [orderedList]);
 
+  // Gets initial budget value if available
   useEffect(() => {
     async function getInitialBudget() {
       const data = await getDocs(budgetRef);
@@ -84,6 +89,7 @@ function AppContext({ children }) {
     );
   }
 
+  // Adds initial budget value
   async function addBudget(budget) {
     await addDoc(budgetRef, {
       initialBudget: budget,
