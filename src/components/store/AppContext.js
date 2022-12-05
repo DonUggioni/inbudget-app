@@ -39,8 +39,6 @@ function AppContext({ children }) {
   // Get list from database and set the initial state
   useEffect(() => {
     async function getList() {
-      // const data = await getDocs(listRef);
-      // setExpensesList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       onSnapshot(orderedList, (snapshot) =>
         setExpensesList(
           snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))

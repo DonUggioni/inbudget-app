@@ -1,0 +1,42 @@
+@use '../../sass/variables';
+
+.login {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__wrapper {
+    max-width: 45rem;
+    width: 90vw;
+    background-color: variables.$cl-white;
+    // padding: 0 6.3rem 4.8rem;
+  }
+
+  &__header--wrapper {
+    width: 100%;
+    padding: 2.4rem 0;
+    text-align: center;
+    background-color: variables.$cl-yellow;
+    margin-bottom: 4.2rem;
+
+    &__header {
+      color: variables.$grey-200;
+    }
+  }
+
+  &__input--wrapper {
+    padding: 0 6.3rem 4.8rem;
+
+    & .wrapper {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    & .wrapper:not(:last-child) {
+      margin-bottom: 2.4rem;
+    }
+  }
+}
