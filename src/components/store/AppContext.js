@@ -22,8 +22,15 @@ function AppContext({ children }) {
   const [initialBudget, setInitialBudget] = useState('');
   const [expensesTotal, setExpensesTotal] = useState('');
   const [remaining, setRemaining] = useState('');
+  const [userData, setUserData] = useState({});
 
-  const listRef = useMemo(() => collection(db, 'expenses'), []);
+  const userRef = collection(
+    db,
+    'users',
+    localStorage.getItem('userId'),
+    'expenses'
+  );
+  const listRef = useMemo(() => collection(db, 'users'), []);
   const budgetRef = useMemo(() => collection(db, 'budget'), []);
   const orderedList = useMemo(
     () => query(listRef, orderBy('date', 'desc'), orderBy('time', 'desc')),
@@ -41,7 +48,10 @@ function AppContext({ children }) {
     async function getList() {
       onSnapshot(orderedList, (snapshot) =>
         setExpensesList(
-          snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+          snapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }))
         )
       );
     }
@@ -59,7 +69,7 @@ function AppContext({ children }) {
 
   // Add items to the list
   async function addExpense(description, type, amount) {
-    await addDoc(listRef, {
+    await addDoc(userRef, {
       description: description,
       type: type,
       amount: Number(amount),
@@ -121,6 +131,8 @@ function AppContext({ children }) {
     setExpensesTotal,
     remaining,
     setRemaining,
+    userData,
+    setUserData,
   };
 
   return (
