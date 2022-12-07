@@ -19,6 +19,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
   }
 
   &__greeting {
@@ -39,5 +40,17 @@
 
   &__user_image {
     width: 100%;
+  }
+
+  &__sign_out--btn {
+    border: none;
+    background-color: transparent;
+    font-family: inherit;
+    color: variables.$cl-blue;
+    position: absolute;
+    left: 0;
+    bottom: -0.6rem;
+    cursor: pointer;
+    text-decoration: underline;
   }
 }

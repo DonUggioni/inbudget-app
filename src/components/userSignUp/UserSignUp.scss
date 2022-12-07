@@ -1,0 +1,133 @@
+@use '../../sass/variables';
+
+.signup {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__wrapper {
+    max-width: 45rem;
+    width: 90vw;
+    background-color: variables.$cl-white;
+    border-radius: 5px;
+    overflow: hidden;
+    -webkit-box-shadow: 0px 5px 20px 0px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0px 5px 20px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 5px 20px 0px rgba(0, 0, 0, 0.5);
+  }
+
+  &__header--wrapper {
+    width: 100%;
+    padding: 2.4rem 0;
+    text-align: center;
+    background-color: variables.$cl-yellow;
+    margin-bottom: 4.2rem;
+
+    &__header {
+      color: variables.$grey-200;
+    }
+  }
+
+  &__input--wrapper {
+    padding: 0 6.3rem 4.8rem;
+
+    & .wrapper {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+
+      & label {
+        color: variables.$cl-almostBlack;
+        font-family: inherit;
+      }
+    }
+
+    & .wrapper:not(:last-child) {
+      margin-bottom: 1.8rem;
+    }
+  }
+
+  & .input {
+    padding: 1.2rem 0.8rem;
+    border-radius: 5px;
+    color: variables.$cl-almostBlack;
+    border: 1px solid variables.$grey-200;
+    font-family: inherit;
+  }
+
+  .btn {
+    padding: 1.2rem 1.8rem;
+    width: 100%;
+    font-family: inherit;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.1s;
+    -webkit-box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.3);
+  }
+
+  &__submit--btn {
+    background-color: variables.$cl-blue;
+    color: variables.$cl-white;
+
+    &:hover {
+      background-color: rgba(variables.$cl-blue, 0.9);
+    }
+  }
+
+  &__divider {
+    display: inline-block;
+    text-align: center;
+    color: variables.$grey-200;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 1.6rem;
+    margin-bottom: 1.6rem;
+    position: relative;
+  }
+
+  &__divider::before {
+    content: '';
+    position: absolute;
+    height: 2px;
+    width: 45%;
+    background-color: rgba(variables.$grey-100, 0.8);
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+  }
+
+  &__divider::after {
+    content: '';
+    position: absolute;
+    height: 2px;
+    width: 45%;
+    background-color: rgba(variables.$grey-100, 0.8);
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+  }
+
+  &__google--btn {
+    background-color: variables.$light-grey;
+    color: variables.$cl-almostBlack;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  &__no_account_message {
+    padding: 0 6.3rem 2.4rem;
+
+    & span {
+      color: variables.$cl-blue;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+}
