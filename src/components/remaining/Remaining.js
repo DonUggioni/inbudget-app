@@ -9,13 +9,17 @@ function Remaining() {
   useEffect(() => {
     const incomeArr = [];
 
+    context.setRemaining(
+      +context.initialBudget[0]?.initialBudget - +context?.expensesTotal
+    );
+
     context.expensesList.forEach((item) => {
       if (item.type === 'income') {
         incomeArr.push(item.amount);
         context.setRemaining(
           +context.initialBudget[0]?.initialBudget +
             incomeArr?.reduce((prev, curr) => prev + curr, 0) -
-            +context.expensesTotal
+            +context?.expensesTotal
         );
       }
     });

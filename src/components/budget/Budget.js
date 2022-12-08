@@ -51,12 +51,7 @@ function Budget() {
       {budgetDisplayEl && (
         <>
           <span>Budget - </span>
-          <h4>
-            $
-            {context.initialBudget
-              ? context.initialBudget[0].initialBudget
-              : ''}
-          </h4>
+          <h4>${context.initialBudget[0]?.initialBudget}</h4>
           {/* <button onClick={editBudgetHandler} className="budget__edit--btn">
             Edit
           </button> */}

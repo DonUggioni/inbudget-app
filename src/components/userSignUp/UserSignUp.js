@@ -13,7 +13,6 @@ function UserSignUp() {
 
   function clickHandler() {
     authCtx.register();
-    // authCtx.updateUsername();
     emailRef.current.value = '';
     passwordRef.current.value = '';
     usernameRef.current.value = '';

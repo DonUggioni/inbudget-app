@@ -9,6 +9,7 @@ import {
   query,
   orderBy,
   deleteDoc,
+  serverTimestamp,
 } from 'firebase/firestore';
 import Moment from 'moment';
 
@@ -22,50 +23,50 @@ function AppContext({ children }) {
   const [initialBudget, setInitialBudget] = useState('');
   const [expensesTotal, setExpensesTotal] = useState('');
   const [remaining, setRemaining] = useState('');
-  const [userData, setUserData] = useState({});
+  const [user, setUser] = useState({});
 
-  const userRef = collection(
-    db,
-    'users',
-    localStorage.getItem('userId'),
-    'expenses'
+  const userRef = useMemo(
+    () => collection(db, 'users', localStorage.getItem('userId'), 'expenses'),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [user]
   );
-  const listRef = useMemo(() => collection(db, 'users'), []);
-  const budgetRef = useMemo(() => collection(db, 'budget'), []);
-  const orderedList = useMemo(
-    () => query(listRef, orderBy('date', 'desc'), orderBy('time', 'desc')),
-    [listRef]
+  const orderedExpenses = useMemo(
+    () => query(userRef, orderBy('timeStamp', 'desc')),
+    [userRef]
   );
 
-  const orderedBudget = query(
-    budgetRef,
-    orderBy('date', 'asc'),
-    orderBy('time', 'desc')
+  const budgetRef = useMemo(
+    () => collection(db, 'users', localStorage.getItem('userId'), 'budget'),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [user]
+  );
+  const orderedBudget = useMemo(
+    () => query(budgetRef, orderBy('timeStamp', 'desc')),
+    [budgetRef]
   );
 
   // Get list from database and set the initial state
-  useEffect(() => {
-    async function getList() {
-      onSnapshot(orderedList, (snapshot) =>
-        setExpensesList(
-          snapshot.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }))
-        )
-      );
-    }
-    getList();
-  }, [orderedList]);
+  async function getList() {
+    onSnapshot(orderedExpenses, (snapshot) =>
+      setExpensesList(
+        snapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      )
+    );
+  }
 
   // Gets initial budget value if available
-  useEffect(() => {
-    async function getInitialBudget() {
-      const data = await getDocs(budgetRef);
+  // useEffect(() => {
+  async function getInitialBudget() {
+    const data = await getDocs(orderedBudget);
+    if (data) {
       setInitialBudget(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     }
-    getInitialBudget();
-  }, [budgetRef]);
+  }
+  // getInitialBudget();
+  // }, []);
 
   // Add items to the list
   async function addExpense(description, type, amount) {
@@ -75,10 +76,11 @@ function AppContext({ children }) {
       amount: Number(amount),
       date: Moment().format('DD/MM/YYYY'),
       time: Moment().format('HH:mm:ss'),
+      timeStamp: serverTimestamp(),
     });
 
     // After adding item, gets a snapshot from current list and updates the state
-    onSnapshot(orderedList, (snapshot) =>
+    onSnapshot(orderedExpenses, (snapshot) =>
       setExpensesList(
         snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       )
@@ -87,10 +89,12 @@ function AppContext({ children }) {
 
   // Delete items from the list
   async function deleteExpense(id) {
-    await deleteDoc(doc(db, 'expenses', id));
+    await deleteDoc(
+      doc(db, 'users', localStorage.getItem('userId'), 'expenses', id)
+    );
 
     // After deleting item, gets a snapshot from current list and updates the state
-    onSnapshot(orderedList, (snapshot) =>
+    onSnapshot(orderedExpenses, (snapshot) =>
       setExpensesList(
         snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       )
@@ -103,6 +107,7 @@ function AppContext({ children }) {
       initialBudget: budget,
       date: Moment().format('DD/MM/YYYY'),
       time: Moment().format('HH:mm:ss'),
+      timeStamp: serverTimestamp(),
     });
 
     // After adding item, gets a snapshot from current list and updates the state
@@ -131,8 +136,10 @@ function AppContext({ children }) {
     setExpensesTotal,
     remaining,
     setRemaining,
-    userData,
-    setUserData,
+    getList,
+    user,
+    setUser,
+    getInitialBudget,
   };
 
   return (

@@ -19,20 +19,23 @@ function AuthContext({ children }) {
   const [registerUsername, setRegisterUsername] = useState('');
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
-  const [user, setUser] = useState({});
   const appContext = useContext(ListValuesContext);
   const navigate = useNavigate();
 
   const usersRef = collection(db, 'users');
 
-  console.log(user);
-
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      localStorage.setItem('userId', currentUser?.uid);
+      if (currentUser) {
+        appContext.setUser(currentUser);
+        localStorage.setItem('userId', currentUser.uid);
+        navigate('/main');
+        appContext.getList();
+        appContext.getInitialBudget();
+      }
     });
-  }, [user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appContext.user]);
 
   async function register() {
     try {
@@ -47,8 +50,8 @@ function AuthContext({ children }) {
           username: registerUsername,
           email: registerEmail,
         });
+        appContext.setUser(user);
         localStorage.setItem('userId', user.user.uid);
-        setUser(user);
         navigate('/main');
       }
     } catch (error) {
@@ -64,8 +67,13 @@ function AuthContext({ children }) {
         loginEmail,
         loginPassword
       );
-      setUser(user);
-      navigate('/main');
+      if (user) {
+        appContext.setUser(user);
+        localStorage.setItem('userId', user.user.uid);
+        navigate('/main');
+        appContext.getList();
+        appContext.getInitialBudget();
+      }
     } catch (error) {
       console.log(error.message);
       alert(error.message);
@@ -74,6 +82,7 @@ function AuthContext({ children }) {
 
   async function logout() {
     await signOut(auth);
+
     navigate('/');
   }
 
@@ -85,7 +94,6 @@ function AuthContext({ children }) {
     register,
     registerUsername,
     setRegisterUsername,
-    user,
     logout,
     login,
   };
