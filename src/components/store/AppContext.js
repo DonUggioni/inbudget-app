@@ -58,15 +58,16 @@ function AppContext({ children }) {
   }
 
   // Gets initial budget value if available
-  // useEffect(() => {
   async function getInitialBudget() {
     const data = await getDocs(orderedBudget);
     if (data) {
       setInitialBudget(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     }
   }
-  // getInitialBudget();
-  // }, []);
+  useEffect(() => {
+    getInitialBudget();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Add items to the list
   async function addExpense(description, type, amount) {

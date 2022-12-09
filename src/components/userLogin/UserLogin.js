@@ -46,11 +46,14 @@ function UserLogin() {
                 ref={passwordRef}
               />
             </div>
-            <button className="btn login__submit--btn">Sign in</button>
+            <button className="btn login__submit--btn">Login</button>
           </form>
           <span className="login__divider">OR</span>
-          <button className="btn login__google--btn">
-            <FcGoogle size={24} /> Sign in with Google
+          <button
+            className="btn login__google--btn"
+            onClick={() => authCtx.googleLogin()}
+          >
+            <FcGoogle size={24} /> Login with Google
           </button>
         </div>
         <p className="login__no_account_message">

@@ -4,11 +4,12 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firestore/firestore-config';
 
 import './Header.scss';
-import userImage from '../../assets/images/myPhoto.JPG';
+import defaultImage from '../../assets/images/default_img.png';
 
 function Header() {
   const authContext = useContext(AuthContextValues);
   const [username, setUsername] = useState('');
+  const [profileImg, setProfileImg] = useState(null);
   const usersRef = useMemo(
     () => doc(db, 'users', localStorage.getItem('userId')),
     []
@@ -20,6 +21,7 @@ function Header() {
 
       if (docSnap.exists()) {
         setUsername(docSnap.data().username);
+        setProfileImg(docSnap.data().image);
       } else {
         // doc.data() will be undefined in this case
         console.log('No such document!');
@@ -42,7 +44,11 @@ function Header() {
           Sign out
         </button>
         <div className="header__user_image-container">
-          <img className="header__user_image" src={userImage} alt="User" />
+          <img
+            className="header__user_image"
+            src={profileImg ? profileImg : defaultImage}
+            alt="User"
+          />
         </div>
       </div>
     </header>

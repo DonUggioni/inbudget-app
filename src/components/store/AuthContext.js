@@ -7,6 +7,8 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from 'firebase/auth';
 import { useNavigate } from 'react-router';
 import { collection, doc, setDoc } from 'firebase/firestore';
@@ -49,6 +51,7 @@ function AuthContext({ children }) {
           userId: user.user.uid,
           username: registerUsername,
           email: registerEmail,
+          image: null,
         });
         appContext.setUser(user);
         localStorage.setItem('userId', user.user.uid);
@@ -86,6 +89,48 @@ function AuthContext({ children }) {
     navigate('/');
   }
 
+  // Google authentication
+  const googleAuth = new GoogleAuthProvider();
+
+  async function googleSignUp() {
+    try {
+      const data = await signInWithPopup(auth, googleAuth);
+      const user = data.user;
+      if (user) {
+        await setDoc(doc(usersRef, user.uid), {
+          userId: user.uid,
+          username: user.displayName,
+          email: user.email,
+          image: user.photoURL,
+        });
+        appContext.setUser(user);
+        localStorage.setItem('userId', user.uid);
+        navigate('/main');
+      }
+    } catch (error) {
+      console.log(error.message);
+      alert(error.message);
+    }
+  }
+
+  async function googleLogin() {
+    try {
+      const data = await signInWithPopup(auth, googleAuth);
+      const user = data.user;
+
+      if (user) {
+        appContext.setUser(user);
+        localStorage.setItem('userId', user.uid);
+        navigate('/main');
+        appContext.getList();
+        appContext.getInitialBudget();
+      }
+    } catch (error) {
+      console.log(error.message);
+      alert(error.message);
+    }
+  }
+
   const values = {
     setRegisterEmail,
     setRegisterPassword,
@@ -96,6 +141,8 @@ function AuthContext({ children }) {
     setRegisterUsername,
     logout,
     login,
+    googleSignUp,
+    googleLogin,
   };
   return (
     <AuthContextValues.Provider value={values}>

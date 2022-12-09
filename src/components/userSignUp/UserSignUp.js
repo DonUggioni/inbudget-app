@@ -59,7 +59,10 @@ function UserSignUp() {
             Sign up
           </button>
           <span className="signup__divider">OR</span>
-          <button className="btn signup__google--btn">
+          <button
+            className="btn signup__google--btn"
+            onClick={() => authCtx.googleSignUp()}
+          >
             <FcGoogle size={24} /> Sign up with Google
           </button>
         </div>
