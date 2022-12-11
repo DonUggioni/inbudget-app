@@ -24,6 +24,8 @@ function AppContext({ children }) {
   const [expensesTotal, setExpensesTotal] = useState('');
   const [remaining, setRemaining] = useState('');
   const [user, setUser] = useState({});
+  const [expenseCollectionName, setExpenseCollectionName] =
+    useState('december');
 
   const userRef = useMemo(
     () => collection(db, 'users', localStorage.getItem('userId'), 'expenses'),
@@ -45,10 +47,9 @@ function AppContext({ children }) {
     [budgetRef]
   );
 
-  // Get list from database and set the initial state
-  async function getList() {
-    onSnapshot(orderedExpenses, (snapshot) =>
-      setExpensesList(
+  function getSnapshot(ref, setData) {
+    onSnapshot(ref, (snapshot) =>
+      setData(
         snapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
@@ -57,12 +58,30 @@ function AppContext({ children }) {
     );
   }
 
+  // Get list from database and set the initial state
+  async function getList() {
+    getSnapshot(orderedExpenses, setExpensesList);
+    // onSnapshot(orderedExpenses, (snapshot) =>
+    //   setExpensesList(
+    //     snapshot.docs.map((doc) => ({
+    //       ...doc.data(),
+    //       id: doc.id,
+    //     }))
+    //   )
+    // );
+  }
+
   // Gets initial budget value if available
   async function getInitialBudget() {
-    const data = await getDocs(orderedBudget);
-    if (data) {
-      setInitialBudget(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    }
+    getSnapshot(orderedBudget, setInitialBudget);
+    // onSnapshot(orderedBudget, (snapshot) =>
+    //   setInitialBudget(
+    //     snapshot.docs.map((doc) => ({
+    //       ...doc.data(),
+    //       id: doc.id,
+    //     }))
+    //   )
+    // );
   }
   useEffect(() => {
     getInitialBudget();
@@ -81,11 +100,12 @@ function AppContext({ children }) {
     });
 
     // After adding item, gets a snapshot from current list and updates the state
-    onSnapshot(orderedExpenses, (snapshot) =>
-      setExpensesList(
-        snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-      )
-    );
+    getSnapshot(orderedExpenses, setExpensesList);
+    // onSnapshot(orderedExpenses, (snapshot) =>
+    //   setExpensesList(
+    //     snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+    //   )
+    // );
   }
 
   // Delete items from the list
@@ -95,11 +115,12 @@ function AppContext({ children }) {
     );
 
     // After deleting item, gets a snapshot from current list and updates the state
-    onSnapshot(orderedExpenses, (snapshot) =>
-      setExpensesList(
-        snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-      )
-    );
+    getSnapshot(orderedExpenses, setExpensesList);
+    // onSnapshot(orderedExpenses, (snapshot) =>
+    //   setExpensesList(
+    //     snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+    //   )
+    // );
   }
 
   // Adds initial budget value
@@ -112,11 +133,12 @@ function AppContext({ children }) {
     });
 
     // After adding item, gets a snapshot from current list and updates the state
-    onSnapshot(orderedBudget, (snapshot) =>
-      setInitialBudget(
-        snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-      )
-    );
+    getSnapshot(orderedBudget, setInitialBudget);
+    // onSnapshot(orderedBudget, (snapshot) =>
+    //   setInitialBudget(
+    //     snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+    //   )
+    // );
   }
 
   const values = {

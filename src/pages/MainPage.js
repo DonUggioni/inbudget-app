@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
+import { ListValuesContext } from '../components/store/AppContext';
 import BarChartComponent from '../components/barChart/BarChartComponent';
 import Budget from '../components/budget/Budget';
 import ExpenseList from '../components/expenseList/ExpenseList';
@@ -10,16 +11,30 @@ import Remaining from '../components/remaining/Remaining';
 import './MainPage.scss';
 
 function MainPage() {
+  const appContext = useContext(ListValuesContext);
+
+  function displayValues() {
+    if (appContext.initialBudget.length > 0) {
+      return (
+        <>
+          <Expenses />
+          <Remaining />
+        </>
+      );
+    }
+  }
+  // useEffect(() => {
+  //   displayValues();
+  // }, [appContext.initialBudget]);
   return (
-    <div>
+    <div className="main__wrapper">
       <Header />
       <main className="main">
         <div className="user_interactions_wrapper">
           <div className="user_interactions_wrapper--inner_wrapper">
             <div className="balance_values">
               <Budget />
-              <Expenses />
-              <Remaining />
+              {displayValues()}
             </div>
             <UserInputs />
           </div>

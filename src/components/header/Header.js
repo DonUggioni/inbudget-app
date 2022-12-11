@@ -16,7 +16,7 @@ function Header() {
   );
 
   useEffect(() => {
-    async function getUsername() {
+    async function getUserInfo() {
       const docSnap = await getDoc(usersRef);
 
       if (docSnap.exists()) {
@@ -27,7 +27,7 @@ function Header() {
         console.log('No such document!');
       }
     }
-    getUsername();
+    getUserInfo();
   }, [usersRef]);
 
   function logoutHandler() {

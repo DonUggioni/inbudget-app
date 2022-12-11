@@ -73,9 +73,9 @@ function AuthContext({ children }) {
       if (user) {
         appContext.setUser(user);
         localStorage.setItem('userId', user.user.uid);
-        navigate('/main');
-        appContext.getList();
         appContext.getInitialBudget();
+        appContext.getList();
+        navigate('/main');
       }
     } catch (error) {
       console.log(error.message);
@@ -84,9 +84,12 @@ function AuthContext({ children }) {
   }
 
   async function logout() {
-    await signOut(auth);
-
-    navigate('/');
+    try {
+      await signOut(auth);
+      navigate('/');
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   // Google authentication
@@ -105,6 +108,7 @@ function AuthContext({ children }) {
         });
         appContext.setUser(user);
         localStorage.setItem('userId', user.uid);
+
         navigate('/main');
       }
     } catch (error) {
@@ -119,11 +123,11 @@ function AuthContext({ children }) {
       const user = data.user;
 
       if (user) {
-        appContext.setUser(user);
         localStorage.setItem('userId', user.uid);
-        navigate('/main');
+        appContext.setUser(user);
         appContext.getList();
         appContext.getInitialBudget();
+        navigate('/main');
       }
     } catch (error) {
       console.log(error.message);

@@ -7,7 +7,6 @@ function Budget() {
   const context = useContext(ListValuesContext);
   const [initialBudgetInput, setInitialBudgetInput] = useState('');
   const [budgetInputEl, setBudgetInputEl] = useState(false);
-  const [budgetDisplayEl, setbudgetDisplayEl] = useState(false);
 
   function initialBudgetHandler(e) {
     e.preventDefault();
@@ -17,13 +16,12 @@ function Budget() {
 
   useEffect(() => {
     function budgetInput() {
-      if (context.initialBudget === '' || context.initialBudget.length === 0) {
+      if (context.initialBudget.length === 0) {
         setBudgetInputEl(true);
       }
 
       if (context.initialBudget.length > 0) {
         setBudgetInputEl(false);
-        setbudgetDisplayEl(true);
       }
     }
     budgetInput();
@@ -48,7 +46,7 @@ function Budget() {
           />
         </form>
       )}
-      {budgetDisplayEl && (
+      {!budgetInputEl && (
         <>
           <span>Budget - </span>
           <h4>${context.initialBudget[0]?.initialBudget}</h4>
