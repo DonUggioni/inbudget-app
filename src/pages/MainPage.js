@@ -14,28 +14,32 @@ function MainPage() {
   const appContext = useContext(ListValuesContext);
 
   function displayValues() {
-    if (appContext.initialBudget.length > 0) {
+    if (
+      appContext.initialBudget.length > 0 &&
+      appContext.budgetName.length > 0
+    ) {
       return (
         <>
+          <Budget />
           <Expenses />
           <Remaining />
         </>
       );
+    } else {
+      return (
+        <>
+          <Budget />
+        </>
+      );
     }
   }
-  // useEffect(() => {
-  //   displayValues();
-  // }, [appContext.initialBudget]);
   return (
     <div className="main__wrapper">
       <Header />
       <main className="main">
         <div className="user_interactions_wrapper">
           <div className="user_interactions_wrapper--inner_wrapper">
-            <div className="balance_values">
-              <Budget />
-              {displayValues()}
-            </div>
+            <div className="balance_values">{displayValues()}</div>
             <UserInputs />
           </div>
           <BarChartComponent />

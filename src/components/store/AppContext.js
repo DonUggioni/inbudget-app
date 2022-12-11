@@ -21,11 +21,10 @@ function AppContext({ children }) {
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState(0);
   const [initialBudget, setInitialBudget] = useState('');
+  const [budgetName, setBudgetName] = useState('');
   const [expensesTotal, setExpensesTotal] = useState('');
   const [remaining, setRemaining] = useState('');
   const [user, setUser] = useState({});
-  const [expenseCollectionName, setExpenseCollectionName] =
-    useState('december');
 
   const userRef = useMemo(
     () => collection(db, 'users', localStorage.getItem('userId'), 'expenses'),
@@ -61,27 +60,11 @@ function AppContext({ children }) {
   // Get list from database and set the initial state
   async function getList() {
     getSnapshot(orderedExpenses, setExpensesList);
-    // onSnapshot(orderedExpenses, (snapshot) =>
-    //   setExpensesList(
-    //     snapshot.docs.map((doc) => ({
-    //       ...doc.data(),
-    //       id: doc.id,
-    //     }))
-    //   )
-    // );
   }
 
   // Gets initial budget value if available
   async function getInitialBudget() {
     getSnapshot(orderedBudget, setInitialBudget);
-    // onSnapshot(orderedBudget, (snapshot) =>
-    //   setInitialBudget(
-    //     snapshot.docs.map((doc) => ({
-    //       ...doc.data(),
-    //       id: doc.id,
-    //     }))
-    //   )
-    // );
   }
   useEffect(() => {
     getInitialBudget();
@@ -95,17 +78,11 @@ function AppContext({ children }) {
       type: type,
       amount: Number(amount),
       date: Moment().format('DD/MM/YYYY'),
-      time: Moment().format('HH:mm:ss'),
       timeStamp: serverTimestamp(),
     });
 
     // After adding item, gets a snapshot from current list and updates the state
     getSnapshot(orderedExpenses, setExpensesList);
-    // onSnapshot(orderedExpenses, (snapshot) =>
-    //   setExpensesList(
-    //     snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-    //   )
-    // );
   }
 
   // Delete items from the list
@@ -116,29 +93,20 @@ function AppContext({ children }) {
 
     // After deleting item, gets a snapshot from current list and updates the state
     getSnapshot(orderedExpenses, setExpensesList);
-    // onSnapshot(orderedExpenses, (snapshot) =>
-    //   setExpensesList(
-    //     snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-    //   )
-    // );
   }
 
   // Adds initial budget value
-  async function addBudget(budget) {
+  async function addBudget(budget, name) {
+    if (!budget || !name) return;
     await addDoc(budgetRef, {
       initialBudget: budget,
+      budgetName: name,
       date: Moment().format('DD/MM/YYYY'),
-      time: Moment().format('HH:mm:ss'),
       timeStamp: serverTimestamp(),
     });
 
     // After adding item, gets a snapshot from current list and updates the state
     getSnapshot(orderedBudget, setInitialBudget);
-    // onSnapshot(orderedBudget, (snapshot) =>
-    //   setInitialBudget(
-    //     snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-    //   )
-    // );
   }
 
   const values = {
@@ -163,6 +131,8 @@ function AppContext({ children }) {
     user,
     setUser,
     getInitialBudget,
+    budgetName,
+    setBudgetName,
   };
 
   return (
