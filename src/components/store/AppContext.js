@@ -25,11 +25,26 @@ function AppContext({ children }) {
   const [expensesTotal, setExpensesTotal] = useState('');
   const [remaining, setRemaining] = useState('');
   const [user, setUser] = useState({});
+  const [expenseListName, setExpenseListName] = useState(null);
+
+  useEffect(() => {
+    const listData =
+      JSON.parse(localStorage.getItem('budgetData')) !== null
+        ? JSON.parse(localStorage.getItem('budgetData'))[0].name
+        : 'default';
+    setExpenseListName(listData);
+  }, [initialBudget]);
 
   const userRef = useMemo(
-    () => collection(db, 'users', localStorage.getItem('userId'), 'expenses'),
+    () =>
+      collection(
+        db,
+        'users',
+        localStorage.getItem('userId'),
+        expenseListName || 'default'
+      ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [user]
+    [user, initialBudget]
   );
   const orderedExpenses = useMemo(
     () => query(userRef, orderBy('timeStamp', 'desc')),
@@ -39,7 +54,7 @@ function AppContext({ children }) {
   const budgetRef = useMemo(
     () => collection(db, 'users', localStorage.getItem('userId'), 'budget'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [user]
+    [user, expenseListName]
   );
   const orderedBudget = useMemo(
     () => query(budgetRef, orderBy('timeStamp', 'desc')),
@@ -68,6 +83,7 @@ function AppContext({ children }) {
   }
   useEffect(() => {
     getInitialBudget();
+    getList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -88,7 +104,7 @@ function AppContext({ children }) {
   // Delete items from the list
   async function deleteExpense(id) {
     await deleteDoc(
-      doc(db, 'users', localStorage.getItem('userId'), 'expenses', id)
+      doc(db, 'users', localStorage.getItem('userId'), expenseListName, id)
     );
 
     // After deleting item, gets a snapshot from current list and updates the state
@@ -104,9 +120,14 @@ function AppContext({ children }) {
       date: Moment().format('DD/MM/YYYY'),
       timeStamp: serverTimestamp(),
     });
+    const localStorageArr =
+      JSON.parse(localStorage.getItem('budgetData')) || [];
+    const newData = [{ budget: budget, name: name }, localStorageArr] || [];
+    localStorage.setItem('budgetData', JSON.stringify(newData));
 
     // After adding item, gets a snapshot from current list and updates the state
     getSnapshot(orderedBudget, setInitialBudget);
+    getSnapshot(orderedExpenses, setExpensesList);
   }
 
   const values = {

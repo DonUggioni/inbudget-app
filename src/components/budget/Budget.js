@@ -9,11 +9,18 @@ function Budget() {
   const [initialBudgetName, setInitialBudgetName] = useState('');
   const [budgetInputEl, setBudgetInputEl] = useState(true);
   const [nameInputEl, setNameInputEl] = useState(true);
+  const [errorMsg, setErrorMsg] = useState(false);
 
   function initialBudgetHandler(e) {
     e.preventDefault();
-    // context.setInitialBudget(initialBudgetInput);
-    context.addBudget(initialBudgetInput, initialBudgetName);
+
+    if (isNaN(initialBudgetInput)) {
+      setErrorMsg(true);
+    } else {
+      setErrorMsg(false);
+      context.addBudget(initialBudgetInput, initialBudgetName);
+      context.getList();
+    }
   }
 
   useEffect(() => {
@@ -34,13 +41,21 @@ function Budget() {
     budgetInput();
   }, [context.initialBudget, context.budgetName]);
 
+  function createNewBudgetHandler() {
+    setBudgetInputEl(false);
+    setNameInputEl(false);
+  }
+
   return (
     <div className="budget">
       {!budgetInputEl && !nameInputEl && (
         <form
-          onSubmit={(e) => initialBudgetHandler(e)}
           className="budget__form"
+          onSubmit={(e) => initialBudgetHandler(e)}
         >
+          {errorMsg && (
+            <span className="budget__error_msg">Must be a number</span>
+          )}
           <div className="budget__input--wrapper">
             <label className="budget__label" htmlFor="budget__input">
               Budget -{' '}
@@ -52,7 +67,6 @@ function Budget() {
               placeholder="Add initial budget."
               onChange={(e) => setInitialBudgetInput(e.target.value)}
             />
-            <button className="budget__add-btn">Add</button>
           </div>
           <div className="budget__input--wrapper">
             <label className="budget__label" htmlFor="budget__input">
@@ -65,8 +79,14 @@ function Budget() {
               placeholder="Add budget name."
               onChange={(e) => setInitialBudgetName(e.target.value)}
             />
-            <button className="budget__add-btn">Add</button>
           </div>
+          <button
+            className="budget__add-btn"
+            onClick={(e) => initialBudgetHandler(e)}
+            type="submit"
+          >
+            Add
+          </button>
         </form>
       )}
       {budgetInputEl && nameInputEl && (
@@ -76,9 +96,12 @@ function Budget() {
             ${context.initialBudget[0]?.initialBudget} for{' '}
             {context.initialBudget[0]?.budgetName}
           </h4>
-          {/* <button onClick={editBudgetHandler} className="budget__edit--btn">
-            Edit
-          </button> */}
+          <button
+            className="budget__create_new--btn"
+            onClick={createNewBudgetHandler}
+          >
+            Create new
+          </button>
         </>
       )}
     </div>

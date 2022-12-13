@@ -14,10 +14,7 @@ function MainPage() {
   const appContext = useContext(ListValuesContext);
 
   function displayValues() {
-    if (
-      appContext.initialBudget.length > 0 &&
-      appContext.budgetName.length > 0
-    ) {
+    if (appContext.initialBudget.length > 0) {
       return (
         <>
           <Budget />

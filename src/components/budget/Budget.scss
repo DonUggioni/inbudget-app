@@ -6,11 +6,20 @@
   align-items: center;
   gap: 0.4rem;
   letter-spacing: 0.5px;
+  position: relative;
 
   & h4 {
     font-size: variables.$fs-h4;
     font-weight: 600;
     letter-spacing: 0.5px;
+  }
+
+  &__error_msg {
+    position: absolute;
+    font-size: 1.2rem;
+    top: -1.6rem;
+    left: 7rem;
+    color: variables.$cl-red;
   }
 
   &__form {
@@ -34,6 +43,29 @@
     font-family: inherit;
     color: variables.$cl-almostWhite;
     cursor: pointer;
+    margin-top: 0.6rem;
+    transition: 0.1s;
+
+    &:hover {
+      background-color: rgb(47, 102, 211);
+    }
+  }
+
+  &__create_new--btn {
+    background-color: variables.$cl-blue;
+    border: none;
+    border-radius: 5px;
+    padding: 0.4rem 0.8rem;
+    font-family: inherit;
+    color: variables.$cl-almostWhite;
+    cursor: pointer;
+    transition: 0.1s;
+    align-self: stretch;
+    margin-left: 6rem;
+
+    &:hover {
+      background-color: rgb(47, 102, 211);
+    }
   }
 
   &__edit--btn {

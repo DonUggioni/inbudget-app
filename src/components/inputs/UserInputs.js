@@ -8,19 +8,27 @@ function UserInputs() {
   const [type, setType] = useState(null);
   const [description, setDescription] = useState(null);
   const [amount, setAmount] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(false);
   const descriptionRef = useRef();
   const amountRef = useRef();
   const optionRef = useRef();
 
   function submitHandler(e) {
     e.preventDefault();
-    context.setType(type);
-    context.setDescription(description);
-    context.setAmount(amount);
-    context.addExpense(description, type, amount);
-    descriptionRef.current.value = '';
-    amountRef.current.value = '';
-    optionRef.current.value = 'default';
+    if (!amount || !type || !description) return;
+
+    if (isNaN(amount)) {
+      setErrorMsg(true);
+    } else {
+      setErrorMsg(false);
+      context.setType(type);
+      context.setDescription(description);
+      context.setAmount(amount);
+      context.addExpense(description, type, amount);
+      descriptionRef.current.value = '';
+      amountRef.current.value = '';
+      optionRef.current.value = 'default';
+    }
   }
 
   return (
@@ -53,9 +61,12 @@ function UserInputs() {
           className="input__amount input_field"
           placeholder="Amount"
         />
-        <button onClick={submitHandler} className="input__add-btn">
+        <button onClick={(e) => submitHandler(e)} className="input__add-btn">
           Add
         </button>
+        {errorMsg && (
+          <span className="input__error_msg">Must be a number.</span>
+        )}
       </div>
     </form>
   );
