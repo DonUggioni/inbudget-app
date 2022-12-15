@@ -1,7 +1,7 @@
-import React, { useContext, useEffect } from 'react';
-import { ListValuesContext } from '../store/AppContext';
+import React, { useContext, useEffect } from "react";
+import { ListValuesContext } from "../store/AppContext";
 
-import './Expenses.scss';
+import "./Expenses.scss";
 
 function Expenses() {
   const context = useContext(ListValuesContext);
@@ -9,7 +9,7 @@ function Expenses() {
   useEffect(() => {
     const expensesArr = [];
     context.expensesList.forEach((item) => {
-      if (item.type === 'expense') {
+      if (item.type === "expense") {
         expensesArr.push(item.amount);
       }
     });
@@ -21,9 +21,9 @@ function Expenses() {
   }, [context.expensesList]);
 
   return (
-    <div className="expenses">
+    <div className='expenses'>
       <span>Expenses - </span>
-      <h4>{'$' + context.expensesTotal || 0}</h4>
+      <h4>{"$" + context.expensesTotal || 0}</h4>
     </div>
   );
 }

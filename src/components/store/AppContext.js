@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect, useMemo } from 'react';
-import { db } from '../../firestore/firestore-config';
+import React, { createContext, useState, useEffect } from "react";
+import { db } from "../../firestore/firestore-config";
 import {
   collection,
   getDocs,
@@ -10,56 +10,25 @@ import {
   orderBy,
   deleteDoc,
   serverTimestamp,
-} from 'firebase/firestore';
-import Moment from 'moment';
+  setDoc,
+} from "firebase/firestore";
+import Moment from "moment";
 
 export const ListValuesContext = createContext(null);
 
 function AppContext({ children }) {
   const [expensesList, setExpensesList] = useState([]);
-  const [type, setType] = useState('');
-  const [description, setDescription] = useState('');
+  const [type, setType] = useState("");
+  const [description, setDescription] = useState("");
   const [amount, setAmount] = useState(0);
-  const [initialBudget, setInitialBudget] = useState('');
-  const [budgetName, setBudgetName] = useState('');
-  const [expensesTotal, setExpensesTotal] = useState('');
-  const [remaining, setRemaining] = useState('');
+  const [initialBudget, setInitialBudget] = useState("");
+  const [expensesTotal, setExpensesTotal] = useState("");
+  const [remaining, setRemaining] = useState("");
   const [user, setUser] = useState({});
-  const [expenseListName, setExpenseListName] = useState(null);
-
-  useEffect(() => {
-    const listData =
-      JSON.parse(localStorage.getItem('budgetData')) !== null
-        ? JSON.parse(localStorage.getItem('budgetData'))[0].name
-        : 'default';
-    setExpenseListName(listData);
-  }, [initialBudget]);
-
-  const userRef = useMemo(
-    () =>
-      collection(
-        db,
-        'users',
-        localStorage.getItem('userId'),
-        expenseListName || 'default'
-      ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [user, initialBudget]
-  );
-  const orderedExpenses = useMemo(
-    () => query(userRef, orderBy('timeStamp', 'desc')),
-    [userRef]
-  );
-
-  const budgetRef = useMemo(
-    () => collection(db, 'users', localStorage.getItem('userId'), 'budget'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [user, expenseListName]
-  );
-  const orderedBudget = useMemo(
-    () => query(budgetRef, orderBy('timeStamp', 'desc')),
-    [budgetRef]
-  );
+  const [budgetData, setBudgetData] = useState([]);
+  const [budgetName, setBudgetName] = useState([]);
+  console.log(budgetData);
+  console.log(expensesList);
 
   function getSnapshot(ref, setData) {
     onSnapshot(ref, (snapshot) =>
@@ -72,62 +41,138 @@ function AppContext({ children }) {
     );
   }
 
-  // Get list from database and set the initial state
-  async function getList() {
-    getSnapshot(orderedExpenses, setExpensesList);
-  }
+  useEffect(() => {
+    const budgetRef = collection(
+      db,
+      "users",
+      localStorage.getItem("userId"),
+      "budget"
+    );
+
+    const orderedBudget = query(budgetRef, orderBy("timeStamp", "desc"));
+    const dataArr = [];
+    async function getBudgetData() {
+      try {
+        const snapShot = await getDocs(orderedBudget);
+        snapShot.forEach((item) => {
+          dataArr.push({ ...item.data() });
+        });
+      } catch (error) {
+        console.log(error.message);
+        alert(error.message);
+      }
+    }
+    getBudgetData();
+    setBudgetData(dataArr);
+  }, []);
 
   // Gets initial budget value if available
   async function getInitialBudget() {
+    const budgetRef = collection(
+      db,
+      "users",
+      localStorage.getItem("userId"),
+      "budget"
+    );
+    const orderedBudget = query(budgetRef, orderBy("timeStamp", "desc"));
+
     getSnapshot(orderedBudget, setInitialBudget);
   }
-  useEffect(() => {
-    getInitialBudget();
-    getList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // Add items to the list
   async function addExpense(description, type, amount) {
-    await addDoc(userRef, {
-      description: description,
-      type: type,
-      amount: Number(amount),
-      date: Moment().format('DD/MM/YYYY'),
-      timeStamp: serverTimestamp(),
-    });
+    const budgetItems = collection(
+      db,
+      "users",
+      localStorage.getItem("userId"),
+      "budget",
+      budgetData[0]?.budgetName,
+      "items"
+    );
 
-    // After adding item, gets a snapshot from current list and updates the state
-    getSnapshot(orderedExpenses, setExpensesList);
+    const orderedItems = query(budgetItems, orderBy("timeStamp", "desc"));
+
+    try {
+      await addDoc(budgetItems, {
+        description: description,
+        type: type,
+        amount: Number(amount),
+        date: Moment().format("DD/MM/YYYY"),
+        timeStamp: serverTimestamp(),
+      });
+
+      getSnapshot(orderedItems, setExpensesList);
+    } catch (error) {
+      console.log(error.message);
+      alert(error.message);
+    }
+  }
+
+  // Get list from database and set the initial state
+
+  async function getItemsList() {
+    const budgetItems = collection(
+      db,
+      "users",
+      localStorage.getItem("userId"),
+      "budget",
+      budgetData[0]?.budgetName,
+      "items"
+    );
+
+    const orderedItems = query(budgetItems, orderBy("timeStamp", "desc"));
+    try {
+      const data = await getDocs(orderedItems);
+      setExpensesList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    } catch (error) {
+      console.log(error.message);
+      alert(error.message);
+    }
   }
 
   // Delete items from the list
   async function deleteExpense(id) {
-    await deleteDoc(
-      doc(db, 'users', localStorage.getItem('userId'), expenseListName, id)
+    const budgetItems = collection(
+      db,
+      "users",
+      localStorage.getItem("userId"),
+      "budget",
+      budgetData[0]?.budgetName,
+      "items"
     );
+    try {
+      await deleteDoc(doc(budgetItems, id));
+    } catch (error) {
+      console.log(error.message);
+      alert(error.message);
+    }
 
     // After deleting item, gets a snapshot from current list and updates the state
-    getSnapshot(orderedExpenses, setExpensesList);
+    getSnapshot(budgetItems, setExpensesList);
   }
 
   // Adds initial budget value
   async function addBudget(budget, name) {
-    if (!budget || !name) return;
-    await addDoc(budgetRef, {
-      initialBudget: budget,
-      budgetName: name,
-      date: Moment().format('DD/MM/YYYY'),
-      timeStamp: serverTimestamp(),
-    });
-    const localStorageArr =
-      JSON.parse(localStorage.getItem('budgetData')) || [];
-    const newData = [{ budget: budget, name: name }, localStorageArr] || [];
-    localStorage.setItem('budgetData', JSON.stringify(newData));
+    const budgetRef = collection(
+      db,
+      "users",
+      localStorage.getItem("userId"),
+      "budget"
+    );
 
+    if (!budget || !name) return;
+    try {
+      await setDoc(doc(budgetRef, name), {
+        initialBudget: budget,
+        budgetName: name,
+        date: Moment().format("DD/MM/YYYY"),
+        timeStamp: serverTimestamp(),
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
     // After adding item, gets a snapshot from current list and updates the state
-    getSnapshot(orderedBudget, setInitialBudget);
-    getSnapshot(orderedExpenses, setExpensesList);
+    getSnapshot(budgetRef, setInitialBudget);
   }
 
   const values = {
@@ -148,10 +193,11 @@ function AppContext({ children }) {
     setExpensesTotal,
     remaining,
     setRemaining,
-    getList,
+    getItemsList,
     user,
     setUser,
     getInitialBudget,
+    budgetData,
     budgetName,
     setBudgetName,
   };

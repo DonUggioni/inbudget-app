@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { ListValuesContext } from './AppContext';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { ListValuesContext } from "./AppContext";
 
-import { auth, db } from '../../firestore/firestore-config';
+import { auth, db } from "../../firestore/firestore-config";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -9,30 +9,29 @@ import {
   signOut,
   GoogleAuthProvider,
   signInWithPopup,
-} from 'firebase/auth';
-import { useNavigate } from 'react-router';
-import { collection, doc, setDoc } from 'firebase/firestore';
+} from "firebase/auth";
+import { useNavigate } from "react-router";
+import { collection, doc, setDoc } from "firebase/firestore";
 
 export const AuthContextValues = createContext(null);
 
 function AuthContext({ children }) {
-  const [registerEmail, setRegisterEmail] = useState('');
-  const [registerPassword, setRegisterPassword] = useState('');
-  const [registerUsername, setRegisterUsername] = useState('');
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const [registerUsername, setRegisterUsername] = useState("");
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
   const appContext = useContext(ListValuesContext);
   const navigate = useNavigate();
 
-  const usersRef = collection(db, 'users');
+  const usersRef = collection(db, "users");
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         appContext.setUser(currentUser);
-        localStorage.setItem('userId', currentUser.uid);
-        navigate('/main');
-        appContext.getList();
+        localStorage.setItem("userId", currentUser.uid);
+        navigate("/main");
         appContext.getInitialBudget();
       }
     });
@@ -54,8 +53,8 @@ function AuthContext({ children }) {
           image: null,
         });
         appContext.setUser(user);
-        localStorage.setItem('userId', user.user.uid);
-        navigate('/main');
+        localStorage.setItem("userId", user.user.uid);
+        navigate("/main");
       }
     } catch (error) {
       console.log(error.message);
@@ -72,10 +71,10 @@ function AuthContext({ children }) {
       );
       if (user) {
         appContext.setUser(user);
-        localStorage.setItem('userId', user.user.uid);
+        localStorage.setItem("userId", user.user.uid);
         appContext.getInitialBudget();
-        appContext.getList();
-        navigate('/main');
+        appContext.getItemsList();
+        navigate("/main");
       }
     } catch (error) {
       console.log(error.message);
@@ -86,7 +85,7 @@ function AuthContext({ children }) {
   async function logout() {
     try {
       await signOut(auth);
-      navigate('/');
+      navigate("/");
     } catch (error) {
       console.log(error.message);
     }
@@ -107,9 +106,9 @@ function AuthContext({ children }) {
           image: user.photoURL,
         });
         appContext.setUser(user);
-        localStorage.setItem('userId', user.uid);
+        localStorage.setItem("userId", user.uid);
 
-        navigate('/main');
+        navigate("/main");
       }
     } catch (error) {
       console.log(error.message);
@@ -123,11 +122,11 @@ function AuthContext({ children }) {
       const user = data.user;
 
       if (user) {
-        localStorage.setItem('userId', user.uid);
+        localStorage.setItem("userId", user.uid);
         appContext.setUser(user);
-        appContext.getList();
         appContext.getInitialBudget();
-        navigate('/main');
+        appContext.getItemsList();
+        navigate("/main");
       }
     } catch (error) {
       console.log(error.message);
