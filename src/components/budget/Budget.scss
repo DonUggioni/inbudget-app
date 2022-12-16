@@ -1,4 +1,4 @@
-@use '../../sass/variables';
+@use "../../sass/variables";
 
 .budget {
   color: variables.$cl-almostBlack;
@@ -51,6 +51,13 @@
     }
   }
 
+  &__btn-wrapper {
+    display: flex;
+    width: auto;
+    margin-left: 6.8rem;
+    gap: 1.2rem;
+  }
+
   &__create_new--btn {
     background-color: variables.$cl-blue;
     border: none;
@@ -60,8 +67,6 @@
     color: variables.$cl-almostWhite;
     cursor: pointer;
     transition: 0.1s;
-    align-self: stretch;
-    margin-left: 6rem;
 
     &:hover {
       background-color: rgb(47, 102, 211);

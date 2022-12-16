@@ -1,7 +1,7 @@
-import React, { useContext, useRef, useState } from 'react';
-import { ListValuesContext } from '../store/AppContext';
+import React, { useContext, useRef, useState } from "react";
+import { ListValuesContext } from "../store/AppContext";
 
-import './UserInputs.scss';
+import "./UserInputs.scss";
 
 function UserInputs() {
   const context = useContext(ListValuesContext);
@@ -25,47 +25,47 @@ function UserInputs() {
       context.setDescription(description);
       context.setAmount(amount);
       context.addExpense(description, type, amount);
-      descriptionRef.current.value = '';
-      amountRef.current.value = '';
-      optionRef.current.value = 'default';
+      descriptionRef.current.value = "";
+      amountRef.current.value = "";
+      optionRef.current.value = "default";
     }
   }
 
   return (
-    <form onSubmit={(e) => submitHandler(e)} className="input">
-      <div className="input__selectors-wrapper">
+    <form onSubmit={(e) => submitHandler(e)} className='input'>
+      <div className='input__selectors-wrapper'>
         <select
-          className="input__selector"
-          id="selector"
-          defaultValue={'default'}
+          className='input__selector'
+          id='selector'
+          defaultValue={"default"}
           onChange={(e) => setType(e.target.value)}
           ref={optionRef}
         >
-          <option value="default" disabled hidden>
+          <option value='default' disabled hidden>
             Type
           </option>
-          <option value="expense">Expense</option>
-          <option value="income">Income</option>
+          <option value='expense'>Expense</option>
+          <option value='income'>Income</option>
         </select>
       </div>
       <input
-        className="input__expense-description input_field"
-        placeholder="Add a description"
+        className='input__expense-description input_field'
+        placeholder='Add a description'
         ref={descriptionRef}
         onChange={(e) => setDescription(e.target.value)}
       />
-      <div className="input__add-wrapper">
+      <div className='input__add-wrapper'>
         <input
           ref={amountRef}
           onChange={(e) => setAmount(e.target.value)}
-          className="input__amount input_field"
-          placeholder="Amount"
+          className='input__amount input_field'
+          placeholder='Amount'
         />
-        <button onClick={(e) => submitHandler(e)} className="input__add-btn">
+        <button onClick={(e) => submitHandler(e)} className='input__add-btn'>
           Add
         </button>
         {errorMsg && (
-          <span className="input__error_msg">Must be a number.</span>
+          <span className='input__error_msg'>Must be a number.</span>
         )}
       </div>
     </form>

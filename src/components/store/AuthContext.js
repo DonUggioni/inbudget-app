@@ -11,7 +11,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { useNavigate } from "react-router";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
 
 export const AuthContextValues = createContext(null);
 
@@ -73,7 +73,6 @@ function AuthContext({ children }) {
         appContext.setUser(user);
         localStorage.setItem("userId", user.user.uid);
         appContext.getInitialBudget();
-        appContext.getItemsList();
         navigate("/main");
       }
     } catch (error) {
@@ -85,6 +84,7 @@ function AuthContext({ children }) {
   async function logout() {
     try {
       await signOut(auth);
+      localStorage.removeItem("userId");
       navigate("/");
     } catch (error) {
       console.log(error.message);
@@ -122,10 +122,15 @@ function AuthContext({ children }) {
       const user = data.user;
 
       if (user) {
+        await updateDoc(doc(usersRef, user.uid), {
+          userId: user.uid,
+          username: user.displayName,
+          email: user.email,
+          image: user.photoURL,
+        });
         localStorage.setItem("userId", user.uid);
         appContext.setUser(user);
         appContext.getInitialBudget();
-        appContext.getItemsList();
         navigate("/main");
       }
     } catch (error) {

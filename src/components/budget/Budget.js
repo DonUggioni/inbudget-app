@@ -23,23 +23,24 @@ function Budget() {
     }
   }
 
+  function deleteBudgetHandler() {
+    context.deleteBudget();
+  }
+
   useEffect(() => {
     function budgetInput() {
-      if (
-        context.initialBudget.length === 0 ||
-        context.budgetName.length === 0
-      ) {
+      if (context.budgetData.length === 0) {
         setBudgetInputEl(false);
         setNameInputEl(false);
       }
 
-      if (context.initialBudget.length > 0 && context.budgetName.length === 0) {
+      if (context.budgetData.length > 0) {
         setBudgetInputEl(true);
         setNameInputEl(true);
       }
     }
     budgetInput();
-  }, [context.initialBudget, context.budgetName]);
+  }, [context.budgetData]);
 
   function createNewBudgetHandler() {
     setBudgetInputEl(false);
@@ -93,12 +94,20 @@ function Budget() {
             ${context.initialBudget[0]?.initialBudget} for{" "}
             {context.initialBudget[0]?.budgetName}
           </h4>
-          <button
-            className='budget__create_new--btn'
-            onClick={createNewBudgetHandler}
-          >
-            Create new
-          </button>
+          <div className='budget__btn-wrapper'>
+            <button
+              className='budget__create_new--btn'
+              onClick={createNewBudgetHandler}
+            >
+              Create new
+            </button>
+            <button
+              className='budget__create_new--btn'
+              onClick={deleteBudgetHandler}
+            >
+              Delete
+            </button>
+          </div>
         </>
       )}
     </div>
