@@ -27,7 +27,6 @@ function AppContext({ children }) {
   const [user, setUser] = useState({});
   const [budgetData, setBudgetData] = useState([]);
   const [budgetName, setBudgetName] = useState([]);
-  console.log(budgetData);
 
   function getSnapshot(ref, setData) {
     onSnapshot(ref, (snapshot) =>
@@ -44,7 +43,7 @@ function AppContext({ children }) {
     const budgetRef = collection(
       db,
       "users",
-      localStorage.getItem("userId"),
+      localStorage.getItem("userId") || "default",
       "budget"
     );
 
@@ -137,7 +136,7 @@ function AppContext({ children }) {
       const budgetItems = collection(
         db,
         "users",
-        localStorage.getItem("userId"),
+        localStorage.getItem("userId") || "default",
         "budget",
         budgetData[0]?.budgetName || "default",
         "items"

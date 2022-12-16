@@ -84,7 +84,6 @@ function AuthContext({ children }) {
   async function logout() {
     try {
       await signOut(auth);
-      localStorage.removeItem("userId");
       navigate("/");
     } catch (error) {
       console.log(error.message);
