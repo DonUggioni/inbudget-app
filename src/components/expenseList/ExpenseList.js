@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { ListValuesContext } from "../store/AppContext";
 
 import ExpenseListItem from "../expenseListItem/ExpenseListItem";
