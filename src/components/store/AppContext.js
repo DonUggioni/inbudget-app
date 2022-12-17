@@ -29,7 +29,7 @@ function AppContext({ children }) {
   const [budgetName, setBudgetName] = useState([]);
 
   function getSnapshot(ref, setData) {
-    onSnapshot(ref, (snapshot) =>
+    onSnapshot(ref, { includeMetadataChanges: true }, (snapshot) =>
       setData(
         snapshot.docs.map((doc) => ({
           ...doc.data(),
@@ -55,13 +55,13 @@ function AppContext({ children }) {
         snapShot.forEach((item) => {
           dataArr.push({ ...item.data() });
         });
+        setBudgetData(dataArr);
       } catch (error) {
         console.log(error.message);
         alert(error.message);
       }
     }
     getBudgetData();
-    setBudgetData(dataArr);
   }, [initialBudget]);
 
   // Gets initial budget value if available
@@ -69,7 +69,7 @@ function AppContext({ children }) {
     const budgetRef = collection(
       db,
       "users",
-      localStorage.getItem("userId"),
+      localStorage.getItem("userId") || "default",
       "budget"
     );
     const orderedBudget = query(budgetRef, orderBy("timeStamp", "desc"));
