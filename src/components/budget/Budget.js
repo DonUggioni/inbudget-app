@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { ListValuesContext } from '../store/AppContext';
+import AppContext, { ListValuesContext } from '../store/AppContext';
 
 import './Budget.scss';
 
@@ -20,6 +20,10 @@ function Budget() {
       setErrorMsg(false);
       context.addBudget(initialBudgetInput, initialBudgetName);
     }
+  }
+
+  function budgetSearchHandler(e) {
+    console.log(e.target.value);
   }
 
   function deleteBudgetHandler() {
@@ -101,6 +105,21 @@ function Budget() {
             >
               Delete
             </button>
+            <select
+              name='search'
+              id='search'
+              className='budget__search'
+              onChange={(e) => budgetSearchHandler(e)}
+            >
+              <option value='default' disabled hidden>
+                Search
+              </option>
+              {context.budgetData.map((item) => (
+                <option value={item.budgetName} key={item.timeStamp}>
+                  {item.budgetName}
+                </option>
+              ))}
+            </select>
           </div>
           <div className='budget__info_display'>
             <span>Budget - </span>

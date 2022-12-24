@@ -48,6 +48,27 @@
     outline: none;
   }
 
+  &__search {
+    background-color: transparent;
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: 400;
+    color: variables.$grey-200;
+    appearance: none;
+    max-width: 15rem;
+    width: 100%;
+    padding: 0.4rem 0.8rem;
+    border: 2px solid variables.$grey-100;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+
+    & option {
+      background-color: variables.$cl-almostWhite;
+      letter-spacing: 0.5px;
+    }
+  }
+
   &__add-btn {
     background-color: variables.$cl-blue;
     border: none;
