@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect } from "react";
-import { db } from "../../firestore/firestore-config";
+import React, { createContext, useState, useEffect } from 'react';
+import { db } from '../../firestore/firestore-config';
 import {
   collection,
   getDocs,
@@ -11,19 +11,19 @@ import {
   deleteDoc,
   serverTimestamp,
   setDoc,
-} from "firebase/firestore";
-import Moment from "moment";
+} from 'firebase/firestore';
+import Moment from 'moment';
 
 export const ListValuesContext = createContext(null);
 
 function AppContext({ children }) {
   const [expensesList, setExpensesList] = useState([]);
-  const [type, setType] = useState("");
-  const [description, setDescription] = useState("");
+  const [type, setType] = useState('');
+  const [description, setDescription] = useState('');
   const [amount, setAmount] = useState(0);
-  const [initialBudget, setInitialBudget] = useState("");
-  const [expensesTotal, setExpensesTotal] = useState("");
-  const [remaining, setRemaining] = useState("");
+  const [initialBudget, setInitialBudget] = useState('');
+  const [expensesTotal, setExpensesTotal] = useState('');
+  const [remaining, setRemaining] = useState('');
   const [user, setUser] = useState({});
   const [budgetData, setBudgetData] = useState([]);
   const [budgetName, setBudgetName] = useState([]);
@@ -42,12 +42,12 @@ function AppContext({ children }) {
   useEffect(() => {
     const budgetRef = collection(
       db,
-      "users",
-      localStorage.getItem("userId") || "default",
-      "budget"
+      'users',
+      localStorage.getItem('userId') || 'default',
+      'budget'
     );
 
-    const orderedBudget = query(budgetRef, orderBy("timeStamp", "desc"));
+    const orderedBudget = query(budgetRef, orderBy('timeStamp', 'desc'));
     const dataArr = [];
     async function getBudgetData() {
       try {
@@ -68,11 +68,11 @@ function AppContext({ children }) {
   async function getInitialBudget() {
     const budgetRef = collection(
       db,
-      "users",
-      localStorage.getItem("userId") || "default",
-      "budget"
+      'users',
+      localStorage.getItem('userId') || 'default',
+      'budget'
     );
-    const orderedBudget = query(budgetRef, orderBy("timeStamp", "desc"));
+    const orderedBudget = query(budgetRef, orderBy('timeStamp', 'desc'));
 
     getSnapshot(orderedBudget, setInitialBudget);
   }
@@ -81,9 +81,9 @@ function AppContext({ children }) {
   async function addBudget(budget, name) {
     const budgetRef = collection(
       db,
-      "users",
-      localStorage.getItem("userId"),
-      "budget"
+      'users',
+      localStorage.getItem('userId'),
+      'budget'
     );
 
     if (!budget || !name) return;
@@ -91,7 +91,7 @@ function AppContext({ children }) {
       await setDoc(doc(budgetRef, name), {
         initialBudget: budget,
         budgetName: name,
-        date: Moment().format("DD/MM/YYYY"),
+        date: Moment().format('DD/MM/YYYY'),
         timeStamp: serverTimestamp(),
       });
     } catch (error) {
@@ -105,21 +105,21 @@ function AppContext({ children }) {
   async function addExpense(description, type, amount) {
     const budgetItems = collection(
       db,
-      "users",
-      localStorage.getItem("userId"),
-      "budget",
+      'users',
+      localStorage.getItem('userId'),
+      'budget',
       budgetData[0]?.budgetName,
-      "items"
+      'items'
     );
 
-    const orderedItems = query(budgetItems, orderBy("timeStamp", "desc"));
+    const orderedItems = query(budgetItems, orderBy('timeStamp', 'desc'));
 
     try {
       await addDoc(budgetItems, {
         description: description,
         type: type,
         amount: Number(amount),
-        date: Moment().format("DD/MM/YYYY"),
+        date: Moment().format('DD/MM/YYYY'),
         timeStamp: serverTimestamp(),
       });
 
@@ -135,14 +135,14 @@ function AppContext({ children }) {
     async function getItemsList() {
       const budgetItems = collection(
         db,
-        "users",
-        localStorage.getItem("userId") || "default",
-        "budget",
-        budgetData[0]?.budgetName || "default",
-        "items"
+        'users',
+        localStorage.getItem('userId') || 'default',
+        'budget',
+        budgetData[0]?.budgetName || 'default',
+        'items'
       );
 
-      const orderedItems = query(budgetItems, orderBy("timeStamp", "desc"));
+      const orderedItems = query(budgetItems, orderBy('timeStamp', 'desc'));
       try {
         const data = await getDocs(orderedItems);
         setExpensesList(
@@ -160,11 +160,11 @@ function AppContext({ children }) {
   async function deleteExpense(id) {
     const budgetItems = collection(
       db,
-      "users",
-      localStorage.getItem("userId"),
-      "budget",
+      'users',
+      localStorage.getItem('userId'),
+      'budget',
       budgetData[0]?.budgetName,
-      "items"
+      'items'
     );
     try {
       await deleteDoc(doc(budgetItems, id));
@@ -180,9 +180,9 @@ function AppContext({ children }) {
   async function deleteBudget() {
     const budgetItems = collection(
       db,
-      "users",
-      localStorage.getItem("userId"),
-      "budget"
+      'users',
+      localStorage.getItem('userId'),
+      'budget'
     );
     try {
       await deleteDoc(doc(budgetItems, budgetData[0].budgetName));
