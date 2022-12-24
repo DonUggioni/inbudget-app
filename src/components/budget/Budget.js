@@ -1,12 +1,12 @@
-import React, { useState, useContext, useEffect } from "react";
-import { ListValuesContext } from "../store/AppContext";
+import React, { useState, useContext, useEffect } from 'react';
+import { ListValuesContext } from '../store/AppContext';
 
-import "./Budget.scss";
+import './Budget.scss';
 
 function Budget() {
   const context = useContext(ListValuesContext);
-  const [initialBudgetInput, setInitialBudgetInput] = useState("");
-  const [initialBudgetName, setInitialBudgetName] = useState("");
+  const [initialBudgetInput, setInitialBudgetInput] = useState('');
+  const [initialBudgetName, setInitialBudgetName] = useState('');
   const [budgetInputEl, setBudgetInputEl] = useState(true);
   const [nameInputEl, setNameInputEl] = useState(true);
   const [errorMsg, setErrorMsg] = useState(false);
@@ -19,8 +19,11 @@ function Budget() {
     } else {
       setErrorMsg(false);
       context.addBudget(initialBudgetInput, initialBudgetName);
-      context.getItemsList();
     }
+  }
+
+  function budgetSearchHandler(e) {
+    context.setSearchOptionIndex(+e.target.value);
   }
 
   function deleteBudgetHandler() {
@@ -56,7 +59,7 @@ function Budget() {
           )}
           <div className='budget__input--wrapper'>
             <label className='budget__label' htmlFor='budget__input'>
-              Budget -{" "}
+              Budget -{' '}
             </label>
             <input
               className='budget__input'
@@ -68,7 +71,7 @@ function Budget() {
           </div>
           <div className='budget__input--wrapper'>
             <label className='budget__label' htmlFor='budget__input'>
-              Budget Name -{" "}
+              Budget Name -{' '}
             </label>
             <input
               className='budget__input'
@@ -88,12 +91,7 @@ function Budget() {
         </form>
       )}
       {budgetInputEl && nameInputEl && (
-        <>
-          <span>Budget - </span>
-          <h4>
-            ${context.initialBudget[0]?.initialBudget} for{" "}
-            {context.initialBudget[0]?.budgetName}
-          </h4>
+        <div className='budget__display--wrapper'>
           <div className='budget__btn-wrapper'>
             <button
               className='budget__create_new--btn'
@@ -107,8 +105,30 @@ function Budget() {
             >
               Delete
             </button>
+            <select
+              name='search'
+              id='search'
+              className='budget__search'
+              onChange={(e) => budgetSearchHandler(e)}
+            >
+              <option value='default' disabled hidden>
+                Search
+              </option>
+              {context.budgetData.map((item, index) => (
+                <option value={index} key={item.timeStamp}>
+                  {item.budgetName}
+                </option>
+              ))}
+            </select>
           </div>
-        </>
+          <div className='budget__info_display'>
+            <span>Budget - </span>
+            <h4>
+              ${context.initialBudget[context.searchOptionIndex]?.initialBudget}{' '}
+              for {context.initialBudget[context.searchOptionIndex]?.budgetName}
+            </h4>
+          </div>
+        </div>
       )}
     </div>
   );

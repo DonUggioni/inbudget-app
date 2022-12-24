@@ -1,7 +1,7 @@
-import React, { useContext, useEffect } from "react";
-import { ListValuesContext } from "../store/AppContext";
+import React, { useContext, useEffect } from 'react';
+import { ListValuesContext } from '../store/AppContext';
 
-import "./Remaining.scss";
+import './Remaining.scss';
 
 function Remaining() {
   const context = useContext(ListValuesContext);
@@ -10,14 +10,15 @@ function Remaining() {
     const incomeArr = [];
 
     context.setRemaining(
-      +context.initialBudget[0]?.initialBudget - +context?.expensesTotal
+      +context.initialBudget[context.searchOptionIndex]?.initialBudget -
+        +context?.expensesTotal
     );
 
     context.expensesList.forEach((item) => {
-      if (item.type === "income") {
+      if (item.type === 'income') {
         incomeArr.push(item.amount);
         context.setRemaining(
-          +context.initialBudget[0]?.initialBudget +
+          +context.initialBudget[context.searchOptionIndex]?.initialBudget +
             incomeArr?.reduce((prev, curr) => prev + curr, 0) -
             +context?.expensesTotal
         );
@@ -34,7 +35,7 @@ function Remaining() {
   return (
     <div className='remaining'>
       <span>Remaining - </span>
-      <h4>{"$" + context.remaining || 0}</h4>
+      <h4>{'$' + context.remaining || 0}</h4>
     </div>
   );
 }
