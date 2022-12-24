@@ -27,6 +27,7 @@ function AppContext({ children }) {
   const [user, setUser] = useState({});
   const [budgetData, setBudgetData] = useState([]);
   const [budgetName, setBudgetName] = useState([]);
+  const [searchOptionIndex, setSearchOptionIndex] = useState(0);
 
   function getSnapshot(ref, setData) {
     onSnapshot(ref, { includeMetadataChanges: true }, (snapshot) =>
@@ -108,7 +109,7 @@ function AppContext({ children }) {
       'users',
       localStorage.getItem('userId'),
       'budget',
-      budgetData[0]?.budgetName,
+      budgetData[searchOptionIndex]?.budgetName,
       'items'
     );
 
@@ -138,7 +139,7 @@ function AppContext({ children }) {
         'users',
         localStorage.getItem('userId') || 'default',
         'budget',
-        budgetData[0]?.budgetName || 'default',
+        budgetData[searchOptionIndex]?.budgetName || 'default',
         'items'
       );
 
@@ -154,7 +155,7 @@ function AppContext({ children }) {
       }
     }
     getItemsList();
-  }, [initialBudget, budgetData]);
+  }, [initialBudget, budgetData, searchOptionIndex]);
 
   // Delete items from the list
   async function deleteExpense(id) {
@@ -163,7 +164,7 @@ function AppContext({ children }) {
       'users',
       localStorage.getItem('userId'),
       'budget',
-      budgetData[0]?.budgetName,
+      budgetData[searchOptionIndex]?.budgetName,
       'items'
     );
     try {
@@ -185,7 +186,9 @@ function AppContext({ children }) {
       'budget'
     );
     try {
-      await deleteDoc(doc(budgetItems, budgetData[0].budgetName));
+      await deleteDoc(
+        doc(budgetItems, budgetData[searchOptionIndex].budgetName)
+      );
     } catch (error) {
       console.log(error.message);
       alert(error.message);
@@ -222,6 +225,8 @@ function AppContext({ children }) {
     budgetName,
     setBudgetName,
     deleteBudget,
+    searchOptionIndex,
+    setSearchOptionIndex,
   };
 
   return (
